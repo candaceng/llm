@@ -1,4 +1,5 @@
 import pickle
+from dotenv import load_dotenv
 import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
 import transformers
@@ -6,6 +7,7 @@ import json
 from collections import Counter
 from torch import cuda, bfloat16
 
+load_dotenv()
 
 def adjust_probabilities(original_probs, sample_prompts):
     """ Adjusts output probabilities based on relative frequency and marginal probabilities
@@ -80,7 +82,7 @@ def get_accuracies():
 def initialize_model(model_name="meta-llama/Llama-2-7b-hf"):
     """Creates tokenizer and model if downloaded files are not available"""
 
-    access_token = os.environ.get('hf_access_token', None)
+    access_token = os.getenv('HF_ACCESS_TOKEN')
     tokenizer = AutoTokenizer.from_pretrained(model_name, token=access_token)
 
     model = AutoModelForCausalLM.from_pretrained(
